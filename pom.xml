@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cwq.spark</groupId>
+    <artifactId>SparkProDemo</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <!-- 子模块 -->
+    <modules>
+        <module>UserModule</module>
+        <module>DoWorkModule</module>
+        <module>DSLModule</module>
+        <module>RealTimeModule</module>
+    </modules>
+
+    <properties>
+        <spark.version>2.1.1</spark.version>
+        <scala.version>2.11.8</scala.version>
+        <log4j.version>1.2.17</log4j.version>
+        <slf4j.version>1.7.22</slf4j.version>
+
+        <fastjson.version>1.2.47</fastjson.version>
+        <httpclient.version>4.5.5</httpclient.version>
+        <httpmime.version>4.3.6</httpmime.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <!--此处放日志包，所有项目都要引用-->
+        <!-- 所有子项目的日志框架 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${slf4j.version}</version>
+        </dependency>
+        <!-- 具体的日志实现 -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!-- spark 连接 hive -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_2.11</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- spark-sql依赖 -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.11</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- spark-core -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- spark-streaming -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming_2.11</artifactId>
+            <!--<scope>provided</scope>-->
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- spark连接kafka -->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.spark</groupId>-->
+            <!--<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>-->
+            <!--&lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
+            <!--<version>${spark.version}</version>-->
+        <!--</dependency>-->
+    </dependencies>
+
+    <!-- 声明构建信息 -->
+    <build>
+        <!-- 声明并引入子项目共有的插件【插件就是附着到Maven各个声明周期的具体实现】 -->
+        <plugins>
+            <plugin >
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <!-- 所有的编译都依照JDK1.8来搞 -->
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <!-- 仅声明子项目共有的插件，如果子项目需要此插件，那么子项目需要声明 -->
+        <pluginManagement>
+            <plugins>
+                <!-- 该插件用于将Scala代码编译成class文件 -->
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.2.2</version>
+                    <executions>
+                        <execution>
+                            <!-- 声明绑定到maven的compile阶段 -->
+                            <goals>
+                                <goal>compile</goal>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- 用于项目的打包插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+</project>
